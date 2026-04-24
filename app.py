@@ -7,7 +7,7 @@ import cv2
 # Page config
 st.set_page_config(page_title="Digit Recognizer", page_icon="✏️", layout="centered")
 
-st.title("✏️ Handwritten Digit Recognizer")
+st.title("Handwritten Digit Recognizer")
 st.markdown("Draw a digit (0–9) below and the model will predict it!")
 
 # Load model (cached)
@@ -74,7 +74,7 @@ with col2:
             predicted = np.argmax(predictions)
             confidence = predictions[predicted] * 100
 
-            st.markdown(f"### 🔢 Predicted: **{predicted}**")
+            st.markdown(f"###Predicted: **{predicted}**")
             st.markdown(f"Confidence: **{confidence:.1f}%**")
 
             st.markdown("**Probability distribution:**")
