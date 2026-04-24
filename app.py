@@ -74,7 +74,7 @@ with col2:
             predicted = np.argmax(predictions)
             confidence = predictions[predicted] * 100
 
-            st.markdown(f"###Predicted: **{predicted}**")
+            st.markdown(f"Predicted: **{predicted}**")
             st.markdown(f"Confidence: **{confidence:.1f}%**")
 
             st.markdown("**Probability distribution:**")
