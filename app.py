@@ -2,7 +2,6 @@ import streamlit as st
 import numpy as np
 import tensorflow as tf
 from streamlit_drawable_canvas import st_canvas
-from PIL import Image, ImageOps
 import cv2
 
 # Page config
@@ -18,7 +17,36 @@ def load_model():
 
 model = load_model()
 
-# Drawing canvas
+# Preprocessing — centers and crops digit like MNIST
+def preprocess(img_array):
+    gray = cv2.cvtColor(img_array, cv2.COLOR_RGBA2GRAY)
+    
+    # Find bounding box of drawn digit
+    coords = cv2.findNonZero(gray)
+    if coords is None:
+        return None
+    
+    x, y, w, h = cv2.boundingRect(coords)
+    cropped = gray[y:y+h, x:x+w]
+    
+    # Make it square by padding the shorter side
+    size = max(w, h)
+    square = np.zeros((size, size), dtype=np.uint8)
+    x_offset = (size - w) // 2
+    y_offset = (size - h) // 2
+    square[y_offset:y_offset+h, x_offset:x_offset+w] = cropped
+    
+    # Add border padding (like MNIST has)
+    pad = int(size * 0.3)
+    square = cv2.copyMakeBorder(square, pad, pad, pad, pad,
+                                 cv2.BORDER_CONSTANT, value=0)
+    
+    # Resize to 28x28
+    resized = cv2.resize(square, (28, 28), interpolation=cv2.INTER_AREA)
+    
+    return resized.reshape(1, 28, 28, 1).astype("float32") / 255.0
+
+# Layout
 col1, col2 = st.columns([1, 1])
 
 with col1:
@@ -39,14 +67,9 @@ with col2:
     if canvas_result.image_data is not None:
         img = canvas_result.image_data.astype(np.uint8)
         
-        # Check if canvas has any drawing
-        if img[:, :, :3].sum() > 0:
-            # Convert to grayscale and resize to 28x28
-            img_gray = cv2.cvtColor(img, cv2.COLOR_RGBA2GRAY)
-            img_resized = cv2.resize(img_gray, (28, 28), interpolation=cv2.INTER_AREA)
-            img_input = img_resized.reshape(1, 28, 28, 1).astype("float32") / 255.0
-
-            # Predict
+        img_input = preprocess(img)
+        
+        if img_input is not None:
             predictions = model.predict(img_input, verbose=0)[0]
             predicted = np.argmax(predictions)
             confidence = predictions[predicted] * 100
@@ -54,7 +77,6 @@ with col2:
             st.markdown(f"### 🔢 Predicted: **{predicted}**")
             st.markdown(f"Confidence: **{confidence:.1f}%**")
 
-            # Bar chart of all probabilities
             st.markdown("**Probability distribution:**")
             prob_dict = {str(i): float(predictions[i]) for i in range(10)}
             st.bar_chart(prob_dict)
