@@ -8,7 +8,7 @@ A web-based deep learning application that recognizes handwritten digits in real
 
 ## Overview
 
-This project combines a Convolutional Neural Network trained on the MNIST dataset with an interactive Streamlit frontend. The model processes your drawing the same way MNIST digits are formatted — cropped, centered, padded, and resized to 28x28 — which significantly improves real-world prediction accuracy compared to naive implementations.
+This project combines a Convolutional Neural Network trained on the MNIST dataset with an interactive Streamlit frontend. The model processes your drawing the same way MNIST digits are formatted, cropped, centered, padded, and resized to 28x28, which significantly improves real-world prediction accuracy compared to naive implementations.
 
 ---
 
@@ -103,7 +103,9 @@ digit-recognizer/
 
 ---
 
-## Author
+
+
+
 
 **Arslan Fareed**
 [github.com/rslaanfareed](https://github.com/rslaanfareed)
