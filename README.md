@@ -2,6 +2,9 @@
 
 A web-based deep learning application that recognizes handwritten digits in real time. Draw any digit from 0 to 9 using your mouse, and the model instantly predicts what you drew — along with a full confidence breakdown.
 
+![Demo](digit_recognizer.gif)
+
+
 **Live Demo:** [digit-recognizer-arslanfareed.streamlit.app](https://digit-recognizer-arslanfareed.streamlit.app)
 
 ---
